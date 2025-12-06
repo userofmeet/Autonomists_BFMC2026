@@ -53,3 +53,10 @@ As development progresses, this repository will include:
 _(Team member roles will be updated as development progresses.)_
 
 ---
+
+-
+
+## 🙏 Acknowledgments
+
+Thanks to **Bosch Engineering Center Cluj** and the BFMC organizers for creating a platform that allows students to explore real-world autonomous driving challenges.
+
