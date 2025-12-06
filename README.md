@@ -44,11 +44,11 @@ As development progresses, this repository will include:
 
 | Name | Role |
 |------|------|
-| Dhyumaan Raval |  |
-| Harshid Rawal |  |
-| Saumy Patel | |
-| Chintan Trivedi |  |
-| Meet Jain |  |
+| Dhyumaan Raval | team lead, microcontroller, power management, pcb designing and verification, vehicle control |
+| Harshid Rawal | computer Vision and AI/ML systems |
+| Saumy Patel | mechanics optimization, sensor integration, vehicle control |
+| Chintan Trivedi | data handling and communication |
+| Meet Jain | rpi related operations, communication protocols |
 
 _(Team member roles will be updated as development progresses.)_
 
