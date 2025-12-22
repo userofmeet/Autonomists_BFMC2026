@@ -1,86 +1,85 @@
-##🚀 Current Status (Stage 1 — December 20, 2025)
-We are in Stage 1: Basic Control and Simulation Validation.
-Achievements
+# Bosch Future Mobility Challenge 2025 - Stage 1 Status
+**Team Name:** Autonomists
+---
 
-##Hardware integration complete: STM32 Nucleo-F401RE (low-level control) + Raspberry Pi (high-level processing).
-Embedded firmware (Mbed OS) deployed and stable.
-Reliable serial communication established between Nucleo and Raspberry Pi.
-Sensors active: IMU (roll, pitch, yaw, accelerations) and battery monitoring with safety features.
-Physical car responds to manual commands.
+## 1. Project Vision
+Our goal is to develop a robust 1:10 scale autonomous vehicle capable of navigating a complex smart-city environment. Our approach prioritizes **safety, modularity, and real-time responsiveness**. By leveraging ROS2 and advanced computer vision, we aim to solve urban mobility challenges like intersection management, pedestrian safety, and high-speed lane keeping.
 
-##Key Focus
-We are primarily developing and testing control logic in a Gazebo simulator with ROS. This approach ensures precise, repeatable, and safe validation before full physical deployment.
-Demonstration Video We have recorded a video showcasing highly accurate control in the simulator (synced with initial physical tests): precise speed holding, steering, timed movements, and clean sensor logging.
+---
 
-##📈 Performance & Control System
-Performance
+## 2. Technical Architecture
+We have designed a modular software stack based on the **Sense-Think-Act** paradigm.
 
-Simulator: Extremely accurate and precise
+### 2.1 Perception (Sense)
+The vehicle perceives its environment through a monocular camera and IMU sensor fusion.
+* **Lane Detection:** Uses Perspective Transform (Bird’s Eye View) and sliding window search to identify lane curvature.
+* **Object Detection:** We utilize a **YOLOv8-tiny** model optimized via TensorRT for real-time detection of:
+    * Traffic Signs (Stop, Priority, Parking, One-way).
+    * Traffic Lights (State recognition via color masking and CNN classification).
+    * Obstacles (Static cars and moving pedestrians).
 
-  * Speed accuracy: ±1 mm/s
-  * Steering: exact angles, zero latency
-  * Perfect repeatability for trajectory analysis
+### 2.2 Decision Making (Think)
+The "Brain" of the vehicle consists of two layers:
+* **Global Planner:** Processes the graph-based map provided by the Bosch Server to find the shortest path between coordinates.
+* **Local Planner (Behavior Layer):** A Finite State Machine (FSM) that handles transitions between states (e.g., `LANE_FOLLOWING` -> `INTERSECTION_APPROACH` -> `WAITING_FOR_LIGHT`).
 
-##Physical Car: Solid baseline
+### 2.3 Control (Act)
+* **Lateral Control:** A **PID Controller** or **Pure Pursuit Algorithm** calculates the required steering angle based on the error from the lane center.
+* **Longitudinal Control:** Adaptive speed control based on detected signs (e.g., 50km/h limit) and proximity to obstacles.
 
-  * Stable runs at 300–400 mm/s
-  * Quick steering response
-  * Minor real-world deviations (to be calibrated next)
+---
 
-##IMU data reliable for orientation and stability feedback.
+## 3. Connectivity (V2X)
+Our system integrates with the Bosch Smart City Server via a dedicated communication node:
+* **Localization:** Subscribing to GPS/Initial position data for global path planning.
+* **Traffic Lights:** Receiving real-time broadcast states to override local vision if visibility is low.
+* **Feedback Loop:** Publishing vehicle telemetry (speed, current position) back to the server for monitoring.
 
-##How We Control the Car
-##Primary Method (Current Stage)
+---
 
-##ROS + Gazebo simulator
+## 4. Development Roadmap
+| Phase | Focus | Deliverable |
+| :--- | :--- | :--- |
+| **Phase 1** | Simulation & Environment Setup | Gazebo/Rviz environment with basic lane following. |
+| **Phase 2** | Perception Refinement | High-accuracy sign recognition (>95% mAP). |
+| **Phase 3** | Integration & Hardware | Porting code to the 1:10 vehicle and tuning PID parameters. |
+| **Phase 4** | Optimization | Reducing latency in the V2X communication loop. |
 
-  * Commands published via ROS topics (e.g., /cmd_vel, custom timed-move topics)
-  * Simulated physics provides perfect execution
-  * All runs recorded as ROS bag files for analysis
-Physical Backup
+---
 
-##Direct serial commands to Nucleo-F401RE: #speed:200;;\r\n → 200 mm/s #steer:100;;\r\n → +10° steering #vcd:150;50;200;;\r\n → 150 mm/s, +5° steer, 20 seconds #imu:1;;\r\n → Enable IMU data stream
+## 5. Software Stack
+* **Language:** Python 3.10 / C++
+* **Framework:** ROS2 Humble
+* **Libraries:** OpenCV (Image Processing), PyTorch/TensorRT (Inference), NumPy (Math).
+* **Simulation:** Gazebo, Foxglove Studio (Visualization).
 
-##Processing Flow
+---
 
-##High-level system (Raspberry Pi / ROS master) computes actions.
-Sends commands (ROS topics or serial).
-Executor (simulator or Nucleo) controls motors.
-Sensors (IMU, battery, etc.) return feedback.
-Closed-loop adjustments + logging.
+## 6. Preliminary Control Code (Abstract)
+```python
+import cv2
+import numpy as np
 
-##IMU data is processed for yaw correction, tilt detection, and future odometry fusion.
-🔮 Future Plans
-We are building a modular, scalable system centered on ROS/ROS2.
-Short-Term (Jan–Feb 2026)
+class AutonomousController:
+    """
+    Core Logic for BFMC Stage 1
+    """
+    def __init__(self):
+        self.steering_angle = 0.0
+        self.velocity = 0.0
 
-##Port validated simulator controls to the physical car.
-Implement sensor fusion (IMU + wheel encoders).
-Begin basic lane detection testing.
+    def get_steering_error(self, frame):
+        # 1. Image Preprocessing (Canny & ROI)
+        # 2. Lane Centroid Calculation
+        # 3. Return error from image center
+        pass
 
-##Mid-Term (Mar–May 2026)
+    def control_loop(self, error):
+        # PID Logic
+        # steering = Kp * error + Ki * integral + Kd * derivative
+        pass
 
-##Full ROS2 stack on Raspberry Pi with separate nodes for perception, planning, and control.
-Implement core algorithms:
-
-  * Lane following: Pure Pursuit / Stanley controller
-  * Traffic sign detection: CNN-based models
-  * Global planning: A* / Hybrid A*
-  * Local avoidance: Dynamic Window Approach (DWA) or Model Predictive Control (MPC)
-  * V2I communication handling
-Long-Term (Competition Preparation)
-
-##End-to-end autonomous pipeline.
-##Advanced navigation with IMU-camera fusion and SLAM.
-##Robust behavior planning for intersections, parking, and complex scenarios.
-##Extensive real-track testing and iterative improvement.
-
-##All progress, code, ROS packages, documentation, and new demo videos will be updated here regularly.
-🙏 Acknowledgments
-Special thanks to:
-
-##Bosch Engineering Center Cluj and the BFMC organizers
-Our university mentors and advisors
-Open-source communities and previous BFMC teams for inspiration and resources
-
-##Team Autonomists — Pushing the limits of autonomous driving, one lap at a time! 🚀 
+    def emergency_stop(self, obstacle_dist):
+        if obstacle_dist < 0.2: # 20cm
+            self.velocity = 0.0
+```
