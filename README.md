@@ -49,8 +49,8 @@ Team_Autonomists/
 
 | Name | Role |
 |------|------|
-| Dhyumaan Raval | team lead, computer vision and AI/ML systems, power management, vehicle control, CAD designer |
-| Meet Jain | rpi related operations, sensor fusion, microcontroller, communication protocols, github, firmware |
+| Dhyumaan Raval | team lead, computer vision and AI/ML systems, vehicle control, CAD designer |
+| Meet Jain | sensor fusion, microcontroller, communication protocols, github, firmware |
 | Saumy Patel | mechanics optimization, sensor integration, vehicle control, CAD designer |
 | Chintan Trivedi | data handling, communication protocols, data curation |
 | Harshid Rawal | computer Vision and AI/ML systems, rpi related operations |
